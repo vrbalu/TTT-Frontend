@@ -1,4 +1,5 @@
-<mat-vertical-stepper [linear]="true" #stepper>
+<div class="container">
+  <mat-vertical-stepper class="center" [linear]="true" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Fill out your name</ng-template>
@@ -34,3 +35,4 @@
     </div>
   </mat-step>
 </mat-vertical-stepper>
+</div>

@@ -1,0 +1,25 @@
+.canvas {
+  width: 70%;
+  height: 100%;
+  background-color: cadetblue;
+  align-items: stretch;
+
+}
+.container {
+  display: flex;
+  height: 100%;
+  flex-flow: row wrap;
+}
+
+.side-panel{
+  width: 30%;
+  height: 100%;
+  align-items: stretch;
+}
+
+.chat{
+  width: 30%;
+  align-items: stretch;
+}
+
+
