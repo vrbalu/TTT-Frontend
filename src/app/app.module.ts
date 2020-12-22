@@ -23,6 +23,11 @@ import {MatCardModule} from '@angular/material/card';
 
 import { ChatComponent } from './components/chat/chat.component';
 import { LoginComponent } from './components/login/login.component';
+import {
+  GoogleLoginProvider,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from "angularx-social-login";
 
 
 
@@ -54,8 +59,22 @@ import { LoginComponent } from './components/login/login.component';
     MatInputModule,
     MatCardModule,
     FormsModule,
+    SocialLoginModule,
   ],
-  providers: [],
+  providers: [{
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: false,
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider(
+            '547797194739-ins99o64tog07np0n91rqpfb3vr8bl7u.apps.googleusercontent.com'
+          )
+        },
+      ]
+    } as SocialAuthServiceConfig,
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
