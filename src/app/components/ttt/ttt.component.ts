@@ -7,9 +7,22 @@ import {Component, OnInit} from '@angular/core';
 })
 
 export class TttComponent implements OnInit {
+  numbers: any;
 
   constructor() {
+    this.numbers = Array.from(Array(20)).map((x, i) => i );
+
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // @ts-ignore
+    document.getElementById('myTable').addEventListener('click', function(){
+      // @ts-ignore
+      var col = window.event.target.cellIndex;
+      // @ts-ignore
+      var row = window.event.target.parentNode.rowIndex;
+      alert('Col index is: ' + col + '\nRow index is: ' + row);
+
+    }, false);
+  }
 }

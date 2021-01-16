@@ -1,8 +1,10 @@
 .canvas {
-  width: 70%;
+  margin-left: 5%;
   height: 100%;
-  background-color: cadetblue;
   align-items: stretch;
+  flex-grow: 3;
+  justify-content: space-evenly;
+
 
 }
 .container {
@@ -14,12 +16,18 @@
 .side-panel{
   width: 30%;
   height: 100%;
-  align-items: stretch;
+  justify-content: space-between;
 }
 
 .chat{
   width: 30%;
   align-items: stretch;
+}
+table, th , td {
+  justify-content: center;
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 10px;
 }
 
 
