@@ -20,7 +20,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
-
 import { ChatComponent } from './components/chat/chat.component';
 import { LoginComponent } from './components/login/login.component';
 import {
@@ -28,6 +27,7 @@ import {
   SocialAuthServiceConfig,
   SocialLoginModule
 } from "angularx-social-login";
+import {MatPseudoCheckboxModule} from "@angular/material/core";
 
 
 
@@ -60,6 +60,7 @@ import {
     MatCardModule,
     FormsModule,
     SocialLoginModule,
+    MatPseudoCheckboxModule,
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',

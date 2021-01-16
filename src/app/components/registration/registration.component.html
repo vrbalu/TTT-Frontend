@@ -1,38 +1,99 @@
-<div class="container">
-  <mat-vertical-stepper class="center" [linear]="true" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Fill out your name</ng-template>
-      <mat-form-field>
-        <mat-label>Nickname</mat-label>
-        <input matInput placeholder="Gamer123" formControlName="firstCtrl" required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Fill out your address</ng-template>
-      <mat-form-field>
-        <mat-label>E-mail</mat-label>
-        <input matInput formControlName="secondCtrl" placeholder="max@mustermann.com"
-               required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    <p>You are now done.</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
-    </div>
-  </mat-step>
-</mat-vertical-stepper>
-</div>
+<form [formGroup]="formGroup">
+  <div class="container">
+    <mat-vertical-stepper class="center" [linear]="true">
+      <mat-step [stepControl]="formGroup.controls['username']">
+        <ng-template matStepLabel>Your username</ng-template>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input type="text" matInput placeholder="Gamer123" formControlName="username" required>
+          <div
+            *ngIf="formGroup.controls['username'].invalid && (formGroup.controls['username'].dirty || formGroup.controls['username'].touched)"
+            class="alert alert-danger">
+            <small *ngIf="formGroup.controls['username'].errors?.required">
+              Name is required.
+            </small>
+          </div>
+        </mat-form-field>
+        <div>
+
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="formGroup.controls['email']">
+        <ng-template matStepLabel>Fill out your e-mail address</ng-template>
+        <mat-form-field>
+          <mat-label>E-mail</mat-label>
+          <input matInput formControlName="email" placeholder="max@mustermann.com"
+                 required>
+          <div
+            *ngIf="formGroup.controls['email'].invalid && (formGroup.controls['email'].dirty || formGroup.controls['email'].touched)"
+            class="alert alert-danger">
+            <small *ngIf="formGroup.controls['email'].invalid">
+              Email address invalid.
+            </small>
+          </div>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="formGroup.controls['password'] && formGroup.controls['password']">
+        <ng-template matStepLabel>Type your password</ng-template>
+        <div>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password"
+                   required>
+          </mat-form-field>
+          <div
+            *ngIf="formGroup.controls['password'].invalid && (formGroup.controls['password'].dirty || formGroup.controls['password'].touched)"
+            class="alert alert-danger">
+            <small *ngIf="formGroup.controls['password'].invalid" class="alert alert-danger">
+              Password must be at least 8 characters long and contain at least one small letter, big letter and a
+              number.
+            </small>
+          </div>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Confirm Password</mat-label>
+            <input matInput type="password" formControlName="passwordConfirmed"
+                   required>
+            <div class="invalid-feedback"
+                 *ngIf="formGroup.errors?.matching && (formGroup.controls['passwordConfirmed'].dirty || formGroup.controls['passwordConfirmed'].touched)">
+              Passwords don't match.
+            </div>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Finish registration</ng-template>
+        <p>You're one last step from finishing your registration. We need you to agree to our Terms and Conditions.</p>
+        <div>
+          <input type="checkbox" formControlName="termsAgreed" [checked]="termsChecked" (change)="termsChecked = !termsChecked">I do Accept Terms and
+          Conditions
+        </div>
+        <div>
+          <button (click)="onSubmit()" type="submit" mat-button name="registerbtn" id="registerbtn"
+                  [disabled]="!termsChecked">Register
+          </button>
+        </div>
+        <div class="alert alert-success mt-2" *ngIf="showSuccessAlert">
+          <button type="button" class="close" (click)="onXClick()">x</button>
+          <strong>Done!</strong>
+          {{successAlertText}}</div>
+        <div class="alert alert-danger mt-2" *ngIf="showDangerAlert">
+          <button type="button" class="close" (click)="onXClick()">x</button>
+          <strong>Error!</strong>
+          {{dangerAlertText}}
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+
+  </div>
+</form>
