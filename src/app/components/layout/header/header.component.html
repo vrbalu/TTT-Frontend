@@ -6,7 +6,13 @@
     <span class="header-title">TickTackToe5</span>
     <span class="header-spacer"></span>
     <button class="header-button" aria-label="Profile">
+
       <mat-icon>account_circle</mat-icon>
+      <div>{{username}}</div>
+    </button>
+    <button class="header-button" aria-label="Logout" (click)="Logout()" style="cursor: pointer">
+      <mat-icon>login</mat-icon>
+      <div>Logout</div>
     </button>
   </mat-toolbar>
 

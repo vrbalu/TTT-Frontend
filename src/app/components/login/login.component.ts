@@ -4,6 +4,7 @@ import {GoogleLoginProvider, SocialAuthService, SocialUser} from "angularx-socia
 import {HttpClient} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
+import {User} from "../../models/user";
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,29 @@ export class LoginComponent implements OnInit {
     .then((userData) => {
       //on success
       //this will return user data from google. What you need is a user token which you will send it to the server
-      this.loginService.googleLoginCallBack(userData);
+      this.loginService.googleLoginCallBack(userData).subscribe(
+        res => {
+          let u: User = (<User>res)
+          localStorage.setItem('currentUser', JSON.stringify(u));
+          this.loginService.currentUserSubject.next(u);
+          this.router.navigate(['/'])
+        }, err => {
+          //show error message
+        }
+      );
     });
   }
+  onLoginClick(): void {
+    console.log(JSON.stringify(this.formGroup.getRawValue()))
+    this.loginService.classicLogin(JSON.stringify(this.formGroup.getRawValue())).subscribe(
+      res => {
+        let u: User = (<User>res)
+        localStorage.setItem('currentUser', JSON.stringify(u));
+        this.loginService.currentUserSubject.next(u);
+        this.router.navigate(['/'])}, err => {
+        //show error message
+      }
+    );
+  };
+
 }
