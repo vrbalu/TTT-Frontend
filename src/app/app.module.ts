@@ -20,7 +20,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
-import { ChatComponent } from './components/chat/chat.component';
+import {MatBadgeModule} from "@angular/material/badge";
 import { LoginComponent } from './components/login/login.component';
 import {
   GoogleLoginProvider,
@@ -28,6 +28,7 @@ import {
   SocialLoginModule
 } from "angularx-social-login";
 import {MatPseudoCheckboxModule} from "@angular/material/core";
+import { FriendshipComponent } from './components/friendship/friendship.component';
 
 
 
@@ -41,8 +42,8 @@ import {MatPseudoCheckboxModule} from "@angular/material/core";
     BodyComponent,
     SidePanelComponent,
     RegistrationComponent,
-    ChatComponent,
-    LoginComponent
+    LoginComponent,
+    FriendshipComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +59,7 @@ import {MatPseudoCheckboxModule} from "@angular/material/core";
     MatButtonModule,
     MatInputModule,
     MatCardModule,
+    MatBadgeModule,
     FormsModule,
     SocialLoginModule,
     MatPseudoCheckboxModule,
