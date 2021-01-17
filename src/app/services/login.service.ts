@@ -26,7 +26,20 @@ export class LoginService {
   classicLogin(authObj: string): Observable<any> {
     return this.http.post("http://localhost:8081/api/sessions",authObj)
   }
+
+  updateUser(bodyObj: string): Observable<any>{
+    return this.http.put("http://localhost:8081/api/users?type=status&email="+this.currentUserValue.email, bodyObj)
+  }
+  silentLogout(){
+    this.updateUser('{"online":false}').subscribe()
+    // remove user from local storage to log user out
+    localStorage.removeItem('currentUser');
+    // @ts-ignore
+    this.currentUserSubject.next(null);
+  }
   logout() {
+    // TODO: Handle error subscribe
+    this.updateUser('{"online":false}').subscribe()
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     // @ts-ignore

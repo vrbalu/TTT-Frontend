@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-ttt',
@@ -9,9 +10,11 @@ import {Component, OnInit} from '@angular/core';
 export class TttComponent implements OnInit {
   numbers: any;
 
-  constructor() {
+  constructor(private loginService: LoginService) {
     this.numbers = Array.from(Array(20)).map((x, i) => i );
-
+    //window.onunload = function () {
+    //  return loginService.silentLogout();
+    //};
   }
 
   ngOnInit(): void {
@@ -24,5 +27,6 @@ export class TttComponent implements OnInit {
       alert('Col index is: ' + col + '\nRow index is: ' + row);
 
     }, false);
+
   }
 }

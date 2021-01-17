@@ -1,13 +1,15 @@
 <mat-card>
     <mat-card-header>
-      Friends online
+      <h2>Lobby</h2>
     </mat-card-header>
     <mat-card-content>
-      <ul>
-        <li>John</li>
-        <li>Carl</li>
-        <li>Peter</li>
-        <li>Player</li>
-      </ul>
+      <tr *ngFor="let user of onlineUsers">
+        <td><svg height="12" width="12">
+          <circle r="40" cx="6" cy="6" fill="green" />
+        </svg> {{user.username}}
+        <span><button>Ask to play</button>
+          <button><mat-icon>group_add</mat-icon></button></span>
+        </td>
+      </tr>
     </mat-card-content>
   </mat-card>

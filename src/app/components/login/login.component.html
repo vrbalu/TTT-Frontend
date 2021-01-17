@@ -1,5 +1,5 @@
 
-  <form [formGroup]="formGroup" (submit)="onLoginClick()">
+  <form [formGroup]="formGroup">
     <div class="container">
     <mat-card class="login-card center">
       <mat-card-title>
@@ -46,7 +46,7 @@
           </mat-form-field>
         </div>
         <div>
-          <button type="submit">LOGIN</button>
+          <button type="submit" [disabled]="!formGroup.valid" (click)="onLoginClick()" (keyup.enter)="onLoginClick()">LOGIN</button>
         </div>
         <div class="mt-2">
           <p>
