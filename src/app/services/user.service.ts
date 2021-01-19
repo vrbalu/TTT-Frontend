@@ -13,4 +13,8 @@ export class UserService {
   getUsers(OnlineOnly: boolean): Observable<any>{
     return this.http.get("http://localhost:8081/api/users?online="+OnlineOnly)
   }
+
+  changePassword(email: string, body: any): Observable<any> {
+    return this.http.put("http://localhost:8081/api/users?type=password&email="+email,body)
+  }
 }

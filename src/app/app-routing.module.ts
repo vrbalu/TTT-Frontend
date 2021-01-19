@@ -5,10 +5,12 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import {RegistrationComponent} from './components/registration/registration.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthService} from "./guards/auth.service";
+import {AdministrationComponent} from "./components/administration/administration.component";
 
 const routes: Routes = [
   { path: '', component: TttComponent, canActivate: [AuthService]},
   { path: 'registration', component: RegistrationComponent},
+  { path: 'administration', component: AdministrationComponent ,canActivate: [AuthService]},
   { path: 'login', component: LoginComponent},
   { path: '**', component: PageNotFoundComponent},
 ];

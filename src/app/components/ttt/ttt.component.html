@@ -1,12 +1,15 @@
-<div><app-header></app-header></div>
+<div>
+  <app-header></app-header>
+</div>
 <div class="container">
   <div class="canvas">
     <table id="myTable" #myTable>
-    <tr *ngFor="let i of numbers">
-      <td *ngFor="let j of numbers"></td>
-    </tr>
-  </table>
+      <tr *ngFor="let i of numbers">
+        <td *ngFor="let j of numbers"></td>
+      </tr>
+    </table>
   </div>
-  <div class="side-panel"><app-side-panel></app-side-panel>
-  <app-friendship></app-friendship></div>
+  <div class="side-panel">
+    <app-side-panel></app-side-panel>
+  </div>
 </div>

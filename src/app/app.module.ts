@@ -28,7 +28,7 @@ import {
   SocialLoginModule
 } from "angularx-social-login";
 import {MatPseudoCheckboxModule} from "@angular/material/core";
-import { FriendshipComponent } from './components/friendship/friendship.component';
+import { AdministrationComponent } from './components/administration/administration.component';
 
 
 
@@ -43,7 +43,7 @@ import { FriendshipComponent } from './components/friendship/friendship.componen
     SidePanelComponent,
     RegistrationComponent,
     LoginComponent,
-    FriendshipComponent
+    AdministrationComponent
   ],
   imports: [
     BrowserModule,

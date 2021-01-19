@@ -6,14 +6,27 @@
       <h3>You: <svg height="12" width="12">
         <circle r="40" cx="6" cy="6" fill="green" />
       </svg> <span>{{currentUser.username}}</span></h3>
-      <h4>Other users:</h4>
-      <tr *ngFor="let user of onlineUsers">
+      <h4>Other online users:</h4>
+      <tr *ngFor="let user of usernames">
         <td><svg height="12" width="12">
           <circle r="40" cx="6" cy="6" fill="green" />
-        </svg> {{user.username}}
+        </svg> {{user}}
         <span><button>Ask to play</button>
-          <button (click)="askForFriendship(currentUser.username,user.username)"><mat-icon>group_add</mat-icon></button></span>
+          <button (click)="askForFriendship(currentUser.username,user)"><mat-icon>group_add</mat-icon></button></span>
         </td>
       </tr>
     </mat-card-content>
   </mat-card>
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Friends</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <tr *ngFor="let friend of friendList">
+      <td><svg height="12" width="12">
+        <circle r="40" cx="6" cy="6" fill="green" />
+      </svg> {{friend}}
+        <span><button>Ask to play</button></span>
+  </mat-card-content>
+</mat-card>
+
