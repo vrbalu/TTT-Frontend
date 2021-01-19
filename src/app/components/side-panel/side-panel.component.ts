@@ -4,6 +4,8 @@ import {User} from "../../models/user";
 import {LoginService} from "../../services/login.service";
 import {FriendshipService} from "../../services/friendship.service";
 import {Friendship} from "../../models/friendship";
+import {webSocket} from "rxjs/webSocket";
+import {GameService} from "../../services/game.service";
 
 @Component({
   selector: 'app-side-panel',
@@ -16,9 +18,11 @@ export class SidePanelComponent implements OnInit {
   friendshipsList: Friendship[] = [];
   friendList: string[] = [];
   usernames: string[] = [];
+  message: any;
   constructor(private userService: UserService,
               private loginService: LoginService,
-              private friendshipService: FriendshipService) {
+              private friendshipService: FriendshipService,
+              private gameService: GameService) {
   }
 
   ngOnInit(): void {
@@ -68,5 +72,11 @@ export class SidePanelComponent implements OnInit {
       }
     }
     return result;
+  }
+
+  inviteUser(user: string) {
+    this.gameService.createGame(this.currentUser.username,user).subscribe(res =>{
+      console.log(res)
+    })
   }
 }

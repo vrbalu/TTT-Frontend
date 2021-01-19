@@ -11,7 +11,7 @@
         <td><svg height="12" width="12">
           <circle r="40" cx="6" cy="6" fill="green" />
         </svg> {{user}}
-        <span><button>Ask to play</button>
+        <span><button (click)="inviteUser(user)">Ask to play</button>
           <button (click)="askForFriendship(currentUser.username,user)"><mat-icon>group_add</mat-icon></button></span>
         </td>
       </tr>
@@ -26,7 +26,7 @@
       <td><svg height="12" width="12">
         <circle r="40" cx="6" cy="6" fill="green" />
       </svg> {{friend}}
-        <span><button>Ask to play</button></span>
+        <span><button (click)="inviteUser(friend)">Ask to play</button></span>
   </mat-card-content>
 </mat-card>
 
