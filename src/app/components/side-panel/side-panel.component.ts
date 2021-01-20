@@ -4,7 +4,6 @@ import {User} from "../../models/user";
 import {LoginService} from "../../services/login.service";
 import {FriendshipService} from "../../services/friendship.service";
 import {Friendship} from "../../models/friendship";
-import {webSocket} from "rxjs/webSocket";
 import {GameService} from "../../services/game.service";
 
 @Component({

@@ -1,6 +1,7 @@
 export interface User {
   username: string;
   email: string;
-  idToken: string;
+  inGame: boolean;
   online: boolean;
+  RegisteredViaGoogle: boolean;
 }

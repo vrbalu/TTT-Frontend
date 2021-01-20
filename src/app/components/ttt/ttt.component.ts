@@ -20,19 +20,17 @@ export class TttComponent implements OnInit {
   currentGamePlay: Gameplay = {}
   public currentUser = this.loginService.currentUserValue
   notCurrentlyPlaying = true;
-  board = Array(20).fill(null).map(() => Array(20));
+  arrayLength = 20;
+  board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
 
   constructor(private loginService: LoginService) {
-    this.numbers = Array.from(Array(20)).map((x, i) => i);
+    this.numbers = Array.from(Array(this.arrayLength)).map((x, i) => i);
     //window.onunload = function () {
     //  return loginService.silentLogout();
     //};
   }
 
   ngOnInit(): void {
-    // @ts-ignore
-
-
     this.ws.onmessage = (message) => {
       let game: Game = JSON.parse(message.data);
       if (game.isGameOn) {
@@ -74,19 +72,13 @@ export class TttComponent implements OnInit {
         // @ts-ignore
         let x = document.getElementById('myTable').rows[move.x].cells;
         x[move.y].innerHTML = "<span style='disabled'>" + move.shape + "</span>";
+
         if (move.user === user1) {
           this.currentGamePlay.user = user2;
           this.currentGamePlay.shape = "O";
         } else {
           this.currentGamePlay.user = user1;
           this.currentGamePlay.shape = "X"
-        }
-        if (!this.currentGamePlay.isWinner){
-          if (move.user === this.currentUser.username){
-          }else {
-            console.log(this.currentGamePlay)
-            console.log(this.currentUser.username)
-          }
         }
         }
 
@@ -95,7 +87,13 @@ export class TttComponent implements OnInit {
     }
   play (currentGamePlay: Gameplay): void {
       let win = false;
-
+      if (currentGamePlay.isWinner){
+        this.isGameOn = false;
+        this.gameWs.close()
+        alert("User "+this.currentGamePlay.user+" LOST!")
+        this.board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
+        //TODO: Request to api update DB.
+      }
         // @ts-ignore
         document.getElementById('myTable').addEventListener('click', () => {
           // @ts-ignore
@@ -109,8 +107,9 @@ export class TttComponent implements OnInit {
                 if (!win) {
                   this.board[currentGamePlay.x][currentGamePlay.y] = "X"
                 } else{
-                  this.currentGamePlay.isWinner = true
-                  alert("You WON!")
+                  currentGamePlay.isWinner = true
+
+
                 }
               }
               if (currentGamePlay.shape === "O"){
@@ -118,12 +117,19 @@ export class TttComponent implements OnInit {
                 if (!win){
                   this.board[currentGamePlay.x][currentGamePlay.y] = "O"
                 } else{
-                  alert("You WON!")
-                  this.currentGamePlay.isWinner = true
+                  currentGamePlay.isWinner = true
                 }
               }
             this.gameWs.send(JSON.stringify(currentGamePlay))
             }
+          }
+          if (win){
+            this.isGameOn = false;
+            this.gameWs.close()
+            alert("User "+this.currentGamePlay.user+" WON!")
+            this.numbers = Array.from(Array(this.arrayLength)).map((x, i) => i);
+            this.board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
+            //TODO: Request to api update DB.
           }
         }, false);
       }
@@ -160,8 +166,7 @@ export class TttComponent implements OnInit {
     return won;
   }
   legalSquare(square:any) {
-    let boardSize = 20;
-    return square[0] < boardSize && square[1] < boardSize && square[0] >= 0 && square[1] >= 0;
+    return square[0] < this.arrayLength && square[1] < this.arrayLength && square[0] >= 0 && square[1] >= 0;
   }
 
 }
