@@ -17,6 +17,7 @@ export class TttComponent implements OnInit {
   gameId: number = 0;
   waiting = false;
   isGameOn = false;
+  // @ts-ignore
   currentGamePlay: Gameplay = {}
   public currentUser = this.loginService.currentUserValue
   notCurrentlyPlaying = true;
@@ -81,11 +82,9 @@ export class TttComponent implements OnInit {
         }
         if (!this.currentGamePlay.isWinner){
           if (move.user === this.currentUser.username){
-            document.addEventListener("click",this.handler,true);
           }else {
             console.log(this.currentGamePlay)
             console.log(this.currentUser.username)
-            this.play(this.currentGamePlay)
           }
         }
         }
@@ -94,21 +93,20 @@ export class TttComponent implements OnInit {
 
     }
   play (currentGamePlay: Gameplay): void {
-      document.removeEventListener('click', this.handler)
-      // @ts-ignore
-      document.getElementById('myTable').addEventListener('click', () => {
-        // @ts-ignore
-        currentGamePlay.y = window.event.target.cellIndex;
-        // @ts-ignore
-        currentGamePlay.x = window.event.target.parentNode.rowIndex;
-        if (currentGamePlay.y !== -1 || currentGamePlay.x !== -1) {
-          this.gameWs.send(JSON.stringify(currentGamePlay))
-        }
-      }, false);
 
-  }
-  handler(e: { stopPropagation: () => void; preventDefault: () => void; }){
-    e.stopPropagation();
-    e.preventDefault();
-  }
+        // @ts-ignore
+        document.getElementById('myTable').addEventListener('click', () => {
+          // @ts-ignore
+          currentGamePlay.y = window.event.target.cellIndex;
+          // @ts-ignore
+          currentGamePlay.x = window.event.target.parentNode.rowIndex;
+          if (currentGamePlay.y !== -1 || currentGamePlay.x !== -1) {
+            if (currentGamePlay.user === this.currentUser.username) {
+            this.gameWs.send(JSON.stringify(currentGamePlay))
+            }
+          }
+        }, false);
+
+      }
+
 }
