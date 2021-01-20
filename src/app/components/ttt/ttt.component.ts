@@ -69,7 +69,6 @@ export class TttComponent implements OnInit {
     this.play(this.currentGamePlay)
     this.gameWs.onmessage = (message) => {
       let move: Gameplay = JSON.parse(message.data);
-      let win = false
       if (move.id === this.currentGamePlay.id) {
 
         // @ts-ignore
@@ -128,48 +127,20 @@ export class TttComponent implements OnInit {
           }
         }, false);
       }
-  /**checkwin(shape:string,x:number,y:number): boolean {
-    if (shape === "X") {
-      for (let i=0; i<5; i++){
-        for (let j=0; j<5; j++){
-          if ("X" === this.gameBoard[x-i][y-j] && x-i > 0 && y-j > 0){
-            return true
-          }
-          if ("X" === this.gameBoard[x][y-j] && y-j > 0){
-            return true
-          }
-          if ("X" === this.gameBoard[x+i][y-j] && x-i > 0 && y-j > 0){
-            return true
-          }
-        }
-      }
-    }
-    if (shape === "O") {
-      for(let i=0; i<this.OArr.length; i++)
-      {
-        for(let j=0; j<this.OArr[i].length; j++)
-        {
-          console.log(x)
-          console.log(y)
-          console.log(this.OArr[i])
-        }
-      }
-    }
-    return false;
-  }**/
+
   checkWin(shape:string, lastMove: any) {
-    var requiredLineLength = 5;
+    let requiredLineLength = 5;
     let lineDirections = [
       [0, 1], //horizontal
       [1, 0], //vertical
       [1, -1], //diagonal 1
       [1, 1] //diagonal 2
     ];
-    let boolWon = false;
-    for (var i = 0; i < lineDirections.length && !boolWon; i++) {
-      var shift = lineDirections[i];
-      var currentSquare = [lastMove[0] + shift[0], lastMove[1] + shift[1]];
-      var lineLength = 1;
+    let won = false;
+    for (let i = 0; i < lineDirections.length && !won; i++) {
+      let shift = lineDirections[i];
+      let currentSquare = [lastMove[0] + shift[0], lastMove[1] + shift[1]];
+      let lineLength = 1;
 
       while (lineLength < requiredLineLength && this.legalSquare(currentSquare) && this.board[currentSquare[0]][currentSquare[1]] === shape) {
         lineLength++;
@@ -184,9 +155,9 @@ export class TttComponent implements OnInit {
         currentSquare[1] -= shift[1];
       }
       if (lineLength >= requiredLineLength)
-        boolWon = true;
+        won = true;
     }
-    return boolWon;
+    return won;
   }
   legalSquare(square:any) {
     let boardSize = 20;
