@@ -1,7 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {LoginService} from "../../services/login.service";
 import {Game} from "../../models/game";
 import {Gameplay} from "../../models/gameplay";
+import {Router} from "@angular/router";
+import {UpdateGame} from "../../models/updateGame";
+import {GameService} from "../../services/game.service";
+import {UserService} from "../../services/user.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-ttt',
@@ -9,7 +14,7 @@ import {Gameplay} from "../../models/gameplay";
   styleUrls: ['./ttt.component.scss']
 })
 
-export class TttComponent implements OnInit {
+export class TttComponent implements OnInit, OnDestroy {
   numbers: any;
   ws = new WebSocket('ws://localhost:8081/api/notify')
   gameWs = new WebSocket('ws://localhost:8081/api/gaming')
@@ -22,15 +27,22 @@ export class TttComponent implements OnInit {
   notCurrentlyPlaying = true;
   arrayLength = 20;
   board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
+  subscriptions: Subscription[] = [];
 
-  constructor(private loginService: LoginService) {
-    this.numbers = Array.from(Array(this.arrayLength)).map((x, i) => i);
+  constructor(private loginService: LoginService,
+              private gameService: GameService,
+              private userService: UserService) {
     //window.onunload = function () {
     //  return loginService.silentLogout();
     //};
   }
-
+  ngOnDestroy(): void {
+    this.ws.close()
+    this.gameWs.close()
+    this.subscriptions.forEach(subscription =>subscription.unsubscribe())
+  }
   ngOnInit(): void {
+    this.numbers = Array.from(Array(this.arrayLength)).map((x, i) => i);
     this.ws.onmessage = (message) => {
       let game: Game = JSON.parse(message.data);
       if (game.isGameOn) {
@@ -41,10 +53,12 @@ export class TttComponent implements OnInit {
       if (game.user1 === this.currentUser.username) {
         this.join(game.id, game.user1, game.user2)
         this.waiting = true;
+        this.subscriptions.push(this.userService.updateUser({username:game.user1,online:true,inGame:true}).subscribe())
       }
       if (game.user2 === this.currentUser.username) {
         if (confirm(game.user1 + " asked you to play, Do you want to join?")) {
           this.join(game.id, game.user1, game.user2)
+          this.subscriptions.push(this.userService.updateUser({username:game.user2,online:true,inGame:true}).subscribe())
           this.waiting = false;
           this.isGameOn = true;
           game.isGameOn = true;
@@ -66,13 +80,27 @@ export class TttComponent implements OnInit {
     this.currentGamePlay.shape = "X"
     this.play(this.currentGamePlay)
     this.gameWs.onmessage = (message) => {
+      if (message.data.startsWith("WON")){
+        let updateGame: UpdateGame = {id:id, winner:message.data.substring(4), isPending:false, isFinished: true}
+        this.subscriptions.push(this.gameService.updateGame(updateGame).subscribe())
+        this.isGameOn = false;
+        this.gameWs.close()
+        alert("User " + message.data.substring(4) + " WON!")
+        this.subscriptions.push(this.userService.updateUser({username:user1,online:true,inGame:false}).subscribe())
+        this.subscriptions.push(this.userService.updateUser({username:user2,online:true,inGame:false}).subscribe())
+        this.board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
+        this.numbers = Array.from(Array(this.arrayLength)).map((x, i) => i);
+        location.reload()
+      }else{
       let move: Gameplay = JSON.parse(message.data);
       if (move.id === this.currentGamePlay.id) {
 
         // @ts-ignore
         let x = document.getElementById('myTable').rows[move.x].cells;
         x[move.y].innerHTML = "<span style='disabled'>" + move.shape + "</span>";
-
+        if (this.currentGamePlay.isWinner) {
+          this.gameWs.send("WON "+this.currentGamePlay.user)
+        }
         if (move.user === user1) {
           this.currentGamePlay.user = user2;
           this.currentGamePlay.shape = "O";
@@ -80,21 +108,20 @@ export class TttComponent implements OnInit {
           this.currentGamePlay.user = user1;
           this.currentGamePlay.shape = "X"
         }
+
+      }
+
+
         }
 
       }
 
     }
   play (currentGamePlay: Gameplay): void {
-      let win = false;
-      if (currentGamePlay.isWinner){
-        this.isGameOn = false;
-        this.gameWs.close()
-        alert("User "+this.currentGamePlay.user+" LOST!")
-        this.board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
+
         //TODO: Request to api update DB.
-      }
-        // @ts-ignore
+    let win = false;
+    // @ts-ignore
         document.getElementById('myTable').addEventListener('click', () => {
           // @ts-ignore
           currentGamePlay.y = window.event.target.cellIndex;
@@ -108,12 +135,10 @@ export class TttComponent implements OnInit {
                   this.board[currentGamePlay.x][currentGamePlay.y] = "X"
                 } else{
                   currentGamePlay.isWinner = true
-
-
                 }
               }
               if (currentGamePlay.shape === "O"){
-                win = this.checkWin("O",[currentGamePlay.x,currentGamePlay.y])
+                let win = this.checkWin("O",[currentGamePlay.x,currentGamePlay.y])
                 if (!win){
                   this.board[currentGamePlay.x][currentGamePlay.y] = "O"
                 } else{
@@ -122,14 +147,6 @@ export class TttComponent implements OnInit {
               }
             this.gameWs.send(JSON.stringify(currentGamePlay))
             }
-          }
-          if (win){
-            this.isGameOn = false;
-            this.gameWs.close()
-            alert("User "+this.currentGamePlay.user+" WON!")
-            this.numbers = Array.from(Array(this.arrayLength)).map((x, i) => i);
-            this.board = Array(this.arrayLength).fill(null).map(() => Array(this.arrayLength));
-            //TODO: Request to api update DB.
           }
         }, false);
       }

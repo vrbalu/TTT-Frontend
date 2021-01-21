@@ -15,13 +15,13 @@ export class HeaderComponent implements OnInit {
   friendsRequestList: Friendship[] = [];
   currentUser = this.ls.currentUserValue.username;
   // @ts-ignore
-  private subscription: Subscription;
+  interval: NodeJS.Timeout
   constructor(private ls: LoginService,
               private friendshipService: FriendshipService) {
   }
 
   ngOnInit(): void {
-    setInterval(() =>{
+     this.interval = setInterval(() =>{
       this.callApi()
     }, 20000);
 
@@ -36,6 +36,7 @@ export class HeaderComponent implements OnInit {
 });
 }
   Logout(): void {
+    clearInterval(this.interval)
     this.ls.logout()
   }
 }

@@ -3,5 +3,5 @@ export interface User {
   email: string;
   inGame: boolean;
   online: boolean;
-  RegisteredViaGoogle: boolean;
+  registeredViaGoogle: boolean;
 }

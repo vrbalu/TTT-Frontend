@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
           this.loginService.currentUserSubject.next(u);
           this.router.navigate(['/'])
         }, err => {
-          //show error message
+          console.log(err)
         }
       );
     });

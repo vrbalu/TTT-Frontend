@@ -83,10 +83,10 @@
                   [disabled]="!termsChecked">Register
           </button>
         </div>
-        <div class="alert alert-success mt-2" *ngIf="showSuccessAlert">
+        <div id="successText" class="alert alert-success mt-2" *ngIf="showSuccessAlert">
           <button type="button" class="close" (click)="onXClick()">x</button>
           <strong>Done!</strong>
-          {{successAlertText}}</div>
+          {{successAlertText}}<a routerLink="/login">login</a></div>
         <div class="alert alert-danger mt-2" *ngIf="showDangerAlert">
           <button type="button" class="close" (click)="onXClick()">x</button>
           <strong>Error!</strong>

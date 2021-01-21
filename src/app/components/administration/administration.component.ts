@@ -19,7 +19,7 @@ export class AdministrationComponent implements OnInit {
   dangerAlertText = "There was an error changing, please try again."
   friendsRequestList: Friendship[] = [];
   friendsList: Friendship[] = [];
-  currentUser = this.loginService.currentUserValue.username;
+  currentUser = this.loginService.currentUserValue;
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private loginService: LoginService,
@@ -43,7 +43,7 @@ export class AdministrationComponent implements OnInit {
   }
   onSubmit(): void {
     console.log(this.formGroup.value)
-    this.userService.changePassword(this.loginService.currentUserValue.email,this.formGroup.value,).subscribe(() => {
+    this.userService.changePassword(this.currentUser.email,this.formGroup.value).subscribe(() => {
       this.showSuccessAlert = true;
       this.formGroup.reset();
     }, () => {
@@ -51,9 +51,9 @@ export class AdministrationComponent implements OnInit {
     });
   }
   getFriends(){
-    this.friendshipService2.getFriendships(this.currentUser,"false","").subscribe(resp2 =>{
+    this.friendshipService2.getFriendships(this.currentUser.username,"false","").subscribe(resp2 =>{
       this.friendsList = resp2
-      this.friendshipService.getFriendships(this.currentUser,"true","true").subscribe(resp =>{
+      this.friendshipService.getFriendships(this.currentUser.username,"true","true").subscribe(resp =>{
         this.friendsRequestList = resp
       });
     });

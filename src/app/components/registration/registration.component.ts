@@ -17,7 +17,7 @@ export class RegistrationComponent implements OnInit {
   response = {}
   private formData: any;
   showSuccessAlert = false
-  successAlertText = "You've been successfully registered."
+  successAlertText = "You've been successfully registered. You may now "
   showDangerAlert = false
   dangerAlertText = "An error occured while registering."
   constructor(private formBuilder: FormBuilder, private regService: RegistrationService) {
@@ -37,7 +37,6 @@ export class RegistrationComponent implements OnInit {
     return frm.controls['password'].value === frm.controls['passwordConfirmed'].value ? null : { matching: true};
   }
   onSubmit(): void {
-    console.log(this.formGroup.value)
     this.regService.registerUser(this.formGroup.value).subscribe(() => {
       this.showSuccessAlert = true;
       this.formGroup.reset();

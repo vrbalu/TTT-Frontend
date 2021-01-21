@@ -5,7 +5,7 @@
 </mat-toolbar>
 <div class="container">
 
-<form [formGroup]="formGroup">
+<form [formGroup]="formGroup" *ngIf="!currentUser.registeredViaGoogle">
   <h2>Password change</h2>
   <mat-vertical-stepper class="center" [linear]="true">
     <mat-step [stepControl]="formGroup.controls['oldPassword'] && formGroup.controls['oldPassword']">
