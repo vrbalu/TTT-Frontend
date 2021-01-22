@@ -43,7 +43,7 @@ export class RegistrationComponent implements OnInit {
       this.formGroup.reset();
     }, () => {
       this.showDangerAlert = true;
-      this.notificationService.createNotification('Registration unsuccessful, please try again.');
+      this.notificationService.createNotification('Registration unsuccessful, please try again with different name/e-mail.');
     });
   }
 

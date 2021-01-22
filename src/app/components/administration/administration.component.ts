@@ -4,6 +4,7 @@ import {UserService} from '../../services/user.service';
 import {LoginService} from '../../services/login.service';
 import {Friendship} from '../../models/friendship';
 import {FriendshipService} from '../../services/friendship.service';
+import {NotificationService} from '../../services/notification.service';
 
 @Component({
   selector: 'app-administration',
@@ -25,7 +26,8 @@ export class AdministrationComponent implements OnInit {
               private userService: UserService,
               private loginService: LoginService,
               private friendshipService: FriendshipService,
-              private friendshipService2: FriendshipService) {
+              private friendshipService2: FriendshipService,
+              private notificationService: NotificationService) {
     this.formGroup = this.formBuilder.group({
       oldPassword: ['', Validators.compose([Validators.required])],
       password: ['', Validators.compose([Validators.required, Validators.pattern(this.PASSWORD_REGEX)])],
@@ -50,6 +52,7 @@ export class AdministrationComponent implements OnInit {
       this.showSuccessAlert = true;
       this.formGroup.reset();
     }, () => {
+      this.notificationService.createNotification('Changing password unsuccessful. Try again.');
       this.showDangerAlert = true;
     });
   }
