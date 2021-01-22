@@ -1,0 +1,24 @@
+<div class="header">
+  <mat-toolbar>
+    <span class="header-title">TickTackToe5</span>
+    <span class="header-spacer"></span>
+    <button class="header-button" aria-label="Home" style="cursor: pointer" routerLink="/">
+      <mat-icon>home</mat-icon>
+      <div>Home</div>
+    </button>
+    <button class="header-button" aria-label="Stats" style="cursor: pointer" routerLink="/stats">
+      <mat-icon>leaderboard</mat-icon>
+      <div>Leaderboard</div>
+    </button>
+
+    <button class="header-button" aria-label="Profile" style="cursor: pointer" routerLink="/administration">
+      <mat-icon matBadge="{{friendsRequestsNumber}}" matBadgeColor="warn">account_circle</mat-icon>
+      <div>{{currentUser}}</div>
+    </button>
+    <button class="header-button" aria-label="Logout" (click)="Logout()" style="cursor: pointer">
+      <mat-icon>login</mat-icon>
+      <div>Logout</div>
+    </button>
+  </mat-toolbar>
+
+</div>
