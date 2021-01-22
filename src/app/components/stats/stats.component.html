@@ -5,8 +5,8 @@
   <h2 class="headline">Leaderboard</h2>
   <mat-table [dataSource]="dataSource" class="table-width" matSort>
     <ng-container matColumnDef="winCount">
-    <mat-header-cell *matHeaderCellDef>Wins</mat-header-cell>
-    <mat-cell *matCellDef="let element">{{element.winCount}}</mat-cell>
+      <mat-header-cell *matHeaderCellDef>Wins</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.winCount}}</mat-cell>
     </ng-container>
     <ng-container matColumnDef="user">
       <mat-header-cell *matHeaderCellDef>User</mat-header-cell>

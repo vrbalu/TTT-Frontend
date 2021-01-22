@@ -75,7 +75,8 @@
         <ng-template matStepLabel>Finish registration</ng-template>
         <p>You're one last step from finishing your registration. We need you to agree to our Terms and Conditions.</p>
         <div>
-          <input type="checkbox" formControlName="termsAgreed" [checked]="termsChecked" (change)="termsChecked = !termsChecked">I do Accept Terms and
+          <input type="checkbox" formControlName="termsAgreed" [checked]="termsChecked"
+                 (change)="termsChecked = !termsChecked">I do Accept Terms and
           Conditions
         </div>
         <div>
@@ -94,6 +95,5 @@
         </div>
       </mat-step>
     </mat-vertical-stepper>
-
   </div>
 </form>

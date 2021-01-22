@@ -1,31 +1,37 @@
 <mat-card>
-    <mat-card-header>
-      <mat-card-title>Lobby</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <h3>You: <svg height="12" width="12">
-        <circle r="40" cx="6" cy="6" fill="green" />
-      </svg> <span>{{currentUserStatus.username}}<span *ngIf="currentUserStatus.inGame"> (in game)</span></span></h3>
-      <h4>Other online users:</h4>
-      <tr *ngFor="let user of usernameListStatus">
-        <td><svg height="12" width="12">
-          <circle r="40" cx="6" cy="6" fill="green" />
-        </svg> {{user.username}} <span *ngIf="user.inGame">(in game)</span>
+  <mat-card-header>
+    <mat-card-title>Lobby</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <h3>You:
+      <svg height="12" width="12">
+        <circle r="40" cx="6" cy="6" fill="green"/>
+      </svg>
+      <span>{{currentUserStatus.username}}<span *ngIf="currentUserStatus.inGame"> (in game)</span></span></h3>
+    <h4>Other online users:</h4>
+    <tr *ngFor="let user of usernameListStatus">
+      <td>
+        <svg height="12" width="12">
+          <circle r="40" cx="6" cy="6" fill="green"/>
+        </svg>
+        {{user.username}} <span *ngIf="user.inGame">(in game)</span>
         <span><button *ngIf="user.online && !user.inGame" (click)="inviteUser(user.username)">Ask to play</button>
           <button (click)="askForFriendship(currentUser,user.username)"><mat-icon>group_add</mat-icon></button></span>
-        </td>
-      </tr>
-    </mat-card-content>
-  </mat-card>
+      </td>
+    </tr>
+  </mat-card-content>
+</mat-card>
 <mat-card class="example-card">
   <mat-card-header>
     <mat-card-title>Friends</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <tr *ngFor="let friend of friendListStatus">
-      <td><svg height="12" width="12">
-        <circle r="40" cx="6" cy="6" fill="green" />
-      </svg> {{friend.username}}<span *ngIf="friend.inGame">(in game)</span>
+      <td>
+        <svg height="12" width="12">
+          <circle r="40" cx="6" cy="6" fill="green"/>
+        </svg>
+        {{friend.username}}<span *ngIf="friend.inGame">(in game)</span>
         <span *ngIf="!friend.online">(offline)</span>
         <span><button *ngIf="friend.online && !friend.inGame" (click)="inviteUser(friend.username)">Ask to play</button></span>
   </mat-card-content>

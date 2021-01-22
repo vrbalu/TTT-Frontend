@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {LoginService} from "../../../services/login.service";
-import {FriendshipService} from "../../../services/friendship.service";
-import {Friendship} from "../../../models/friendship";
-import {Observable, Subscription, timer} from "rxjs";
-import {switchMap} from "rxjs/operators";
-import {NotificationService} from "../../../services/notification.service";
+import {Component, OnInit} from '@angular/core';
+import {LoginService} from '../../../services/login.service';
+import {FriendshipService} from '../../../services/friendship.service';
+import {Friendship} from '../../../models/friendship';
+import {NotificationService} from '../../../services/notification.service';
 
 @Component({
   selector: 'app-header',
@@ -12,36 +10,36 @@ import {NotificationService} from "../../../services/notification.service";
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  friendsRequestsNumber: number = 0;
+  friendsRequestsNumber = 0;
   friendsRequestList: Friendship[] = [];
   currentUser = this.ls.currentUserValue.username;
   // @ts-ignore
-  interval: NodeJS.Timeout
+  interval: NodeJS.Timeout;
+
   constructor(private ls: LoginService,
               private friendshipService: FriendshipService,
               private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-     this.interval = setInterval(() =>{
-      this.callApi()
+    this.interval = setInterval(() => {
+      this.callApi();
     }, 20000);
-
-
   }
-  callApi(): void {
-  this.friendshipService.getFriendships(this.currentUser,"true","true").subscribe(resp =>{
-  this.friendsRequestList = resp
-    if (this.friendsRequestList !== null){
-      this.friendsRequestsNumber = this.friendsRequestList.length
-    }
-}, () => {
-    this.notificationService.createNotification("Friendship requests update unsuccessful.")
 
-  });
-}
+  callApi(): void {
+    this.friendshipService.getFriendships(this.currentUser, 'true', 'true').subscribe(resp => {
+      this.friendsRequestList = resp;
+      if (this.friendsRequestList !== null) {
+        this.friendsRequestsNumber = this.friendsRequestList.length;
+      }
+    }, () => {
+      this.notificationService.createNotification('Friendship requests update unsuccessful.');
+    });
+  }
+
   Logout(): void {
-    clearInterval(this.interval)
-    this.ls.logout()
+    clearInterval(this.interval);
+    this.ls.logout();
   }
 }

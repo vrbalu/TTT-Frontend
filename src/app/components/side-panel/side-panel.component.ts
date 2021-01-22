@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from "../../services/user.service";
-import {User} from "../../models/user";
-import {LoginService} from "../../services/login.service";
-import {FriendshipService} from "../../services/friendship.service";
-import {Friendship} from "../../models/friendship";
-import {GameService} from "../../services/game.service";
-import {UpdateUserStatus} from "../../models/updateUserStatus";
-import {Subscription} from "rxjs";
-import {NotificationService} from "../../services/notification.service";
+import {UserService} from '../../services/user.service';
+import {User} from '../../models/user';
+import {LoginService} from '../../services/login.service';
+import {FriendshipService} from '../../services/friendship.service';
+import {Friendship} from '../../models/friendship';
+import {GameService} from '../../services/game.service';
+import {UpdateUserStatus} from '../../models/updateUserStatus';
+import {Subscription} from 'rxjs';
+import {NotificationService} from '../../services/notification.service';
 
 @Component({
   selector: 'app-side-panel',
@@ -16,122 +16,128 @@ import {NotificationService} from "../../services/notification.service";
 })
 export class SidePanelComponent implements OnInit, OnDestroy {
   onlineUsers: User[] = [];
-  currentUser = this.loginService.currentUserValue.username
-  currentUserStatus: UpdateUserStatus = {username:this.currentUser,online:true,inGame:false}
+  currentUser = this.loginService.currentUserValue.username;
+  currentUserStatus: UpdateUserStatus = {username: this.currentUser, online: true, inGame: false};
   friendshipsList: Friendship[] = [];
   friendList: string[] = [];
   usernames: string[] = [];
-  friendListStatus: UpdateUserStatus[] = []
-  usernameListStatus: UpdateUserStatus[] = []
+  friendListStatus: UpdateUserStatus[] = [];
+  usernameListStatus: UpdateUserStatus[] = [];
   subscriptions: Subscription[] = [];
   message: any;
-  wsStatus = new WebSocket('ws://localhost:8081/api/status')
+  wsStatus = new WebSocket('ws://localhost:8081/api/status');
+
   constructor(private userService: UserService,
               private loginService: LoginService,
               private friendshipService: FriendshipService,
               private gameService: GameService,
               private notificationService: NotificationService) {
   }
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription =>subscription.unsubscribe())
-    this.wsStatus.close()
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.wsStatus.close();
   }
 
   ngOnInit(): void {
     this.wsStatus.onmessage = (message) => {
-      let status: UpdateUserStatus = JSON.parse(message.data);
-      if (this.currentUserStatus.username === status.username){
+      const status: UpdateUserStatus = JSON.parse(message.data);
+      if (this.currentUserStatus.username === status.username) {
         this.currentUserStatus = status;
       }
 
-      if (this.usernameListStatus !== null){
-        this.usernameListStatus.forEach((user,index) => {
+      if (this.usernameListStatus !== null) {
+        this.usernameListStatus.forEach((user, index) => {
           if (user.username === status.username) {
             this.usernameListStatus[index] = status;
           }
-        })
+        });
       }
-      if (this.friendListStatus !== null){
-        this.friendListStatus.forEach((user,index) => {
+      if (this.friendListStatus !== null) {
+        this.friendListStatus.forEach((user, index) => {
           if (user.username === status.username) {
             this.friendListStatus[index] = status;
           }
-        })
+        });
       }
-    }
-    this.subscriptions.push(this.friendshipService.getFriendships(this.currentUser, "false", "").subscribe(resp => {
+    };
+    this.subscriptions.push(this.friendshipService.getFriendships(this.currentUser, 'false', '').subscribe(resp => {
       this.friendshipsList = resp;
       this.friendList = this.modifyFriendshipToUsernames(this.friendshipsList);
     }, () => {
-      this.notificationService.createNotification("Error getting your friendships.")
+      this.notificationService.createNotification('Error getting your friendships.');
 
-    }))
+    }));
     this.subscriptions.push(this.userService.getUsers(true).subscribe(resp => {
-        this.onlineUsers = resp
+        this.onlineUsers = resp;
         // Pop current user
-        if (this.onlineUsers !== null){
-        this.onlineUsers.forEach((user) =>
-        this.usernames.push(user.username)
-      )
-      this.usernames = this.difference(this.usernames,this.friendList)
-          this.friendListStatus = this.mapListToStatus(this.friendList)
-          this.usernameListStatus = this.mapListToStatus(this.usernames)
-      }
+        if (this.onlineUsers !== null) {
+          this.onlineUsers.forEach((user) =>
+            this.usernames.push(user.username)
+          );
+          this.usernames = this.difference(this.usernames, this.friendList);
+          this.friendListStatus = this.mapListToStatus(this.friendList);
+          this.usernameListStatus = this.mapListToStatus(this.usernames);
+        }
       },
-      () =>{
-        this.notificationService.createNotification("Error getting online users.")
+      () => {
+        this.notificationService.createNotification('Error getting online users.');
       }
-    ))
+    ));
 
 
   }
 
   askForFriendship(user1: string, user2: string): void {
     this.subscriptions.push(this.friendshipService.createFriendship(user1, user2).subscribe(() => {
-      alert("Asked for friendship!")
+      alert('Asked for friendship!');
     }, () => {
-      this.notificationService.createNotification("Asking for friendship unsuccessful.")
+      this.notificationService.createNotification('Asking for friendship unsuccessful.');
     }));
   }
-  mapListToStatus(list: string[]): UpdateUserStatus[]{
-    let newList: UpdateUserStatus[] = []
-    if (list !== null){
+
+  mapListToStatus(list: string[]): UpdateUserStatus[] {
+    const newList: UpdateUserStatus[] = [];
+    if (list !== null) {
       list.forEach((username) => {
-      let user: UpdateUserStatus = {username:username,inGame:false,online:true}
-      newList.push(user)
-      })
+        const user: UpdateUserStatus = {username, inGame: false, online: true};
+        newList.push(user);
+      });
     }
-    return newList
+    return newList;
   }
+
   modifyFriendshipToUsernames(list: Friendship[]): string[] {
-    let resultList: string[] = [];
-    if (list !== null){
-    list.forEach((friendship) => {
-      if (friendship.user1 === this.currentUser) {
-        resultList.push(friendship.user2)
-      }
-      if (friendship.user2 === this.currentUser) {
-        resultList.push(friendship.user1)
-      }
-    });
+    const resultList: string[] = [];
+    if (list !== null) {
+      list.forEach((friendship) => {
+        if (friendship.user1 === this.currentUser) {
+          resultList.push(friendship.user2);
+        }
+        if (friendship.user2 === this.currentUser) {
+          resultList.push(friendship.user1);
+        }
+      });
     }
-    return resultList
+    return resultList;
   }
-  difference(a1: string[], a2:string[]): string[] {
-    let result = [];
-    for (let i = 0; i < a1.length; i++) {
-      if (a2.indexOf(a1[i]) === -1) {
-        if (a1[i] !== this.currentUser){
-          result.push(a1[i]);
+
+  difference(a1: string[], a2: string[]): string[] {
+    const result = [];
+    for (const item of a1) {
+      if (a2.indexOf(item) === -1) {
+        if (item !== this.currentUser) {
+          result.push(item);
         }
       }
     }
     return result;
   }
 
-  inviteUser(user: string) {
-    this.subscriptions.push(this.gameService.createGame(this.currentUser,user).subscribe(()=>{},()=>
-      this.notificationService.createNotification("Error getting your friendships.")
+  inviteUser(user: string): void {
+    this.subscriptions.push(this.gameService.createGame(this.currentUser, user).subscribe(() => {
+      }, () =>
+        this.notificationService.createNotification('Error getting your friendships.')
     ));
   }
 }
