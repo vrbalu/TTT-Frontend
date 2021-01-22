@@ -1,8 +1,6 @@
-<mat-toolbar>
-  <button class="header-button " aria-label="Back" routerLink="/">
-    <mat-icon>home</mat-icon>
-  </button>
-</mat-toolbar>
+<div>
+  <app-header></app-header>
+</div>
 <div class="container">
 
 <form [formGroup]="formGroup" *ngIf="!currentUser.registeredViaGoogle">

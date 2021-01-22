@@ -21,6 +21,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatBadgeModule} from "@angular/material/badge";
+import {MatTableModule} from "@angular/material/table";
 import { LoginComponent } from './components/login/login.component';
 import {
   GoogleLoginProvider,
@@ -29,6 +30,8 @@ import {
 } from "angularx-social-login";
 import {MatPseudoCheckboxModule} from "@angular/material/core";
 import { AdministrationComponent } from './components/administration/administration.component';
+import { StatsComponent } from './components/stats/stats.component';
+import {MatSortModule} from "@angular/material/sort";
 
 
 
@@ -43,7 +46,8 @@ import { AdministrationComponent } from './components/administration/administrat
     SidePanelComponent,
     RegistrationComponent,
     LoginComponent,
-    AdministrationComponent
+    AdministrationComponent,
+    StatsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +56,7 @@ import { AdministrationComponent } from './components/administration/administrat
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,
+    MatTableModule,
     MatSidenavModule,
     MatStepperModule,
     MatFormFieldModule,
@@ -63,6 +68,7 @@ import { AdministrationComponent } from './components/administration/administrat
     FormsModule,
     SocialLoginModule,
     MatPseudoCheckboxModule,
+    MatSortModule,
   ],
   providers: [{
     provide: 'SocialAuthServiceConfig',

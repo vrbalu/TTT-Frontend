@@ -5,9 +5,9 @@ import {LoginService} from "../../services/login.service";
 import {FriendshipService} from "../../services/friendship.service";
 import {Friendship} from "../../models/friendship";
 import {GameService} from "../../services/game.service";
-import {Game} from "../../models/game";
 import {UpdateUserStatus} from "../../models/updateUserStatus";
 import {Subscription} from "rxjs";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-side-panel',
@@ -29,7 +29,8 @@ export class SidePanelComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService,
               private loginService: LoginService,
               private friendshipService: FriendshipService,
-              private gameService: GameService) {
+              private gameService: GameService,
+              private notificationService: NotificationService) {
   }
   ngOnDestroy() {
     this.subscriptions.forEach(subscription =>subscription.unsubscribe())
@@ -61,32 +62,41 @@ export class SidePanelComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.friendshipService.getFriendships(this.currentUser, "false", "").subscribe(resp => {
       this.friendshipsList = resp;
       this.friendList = this.modifyFriendshipToUsernames(this.friendshipsList);
+    }, () => {
+      this.notificationService.createNotification("Error getting your friendships.")
+
     }))
     this.subscriptions.push(this.userService.getUsers(true).subscribe(resp => {
         this.onlineUsers = resp
         // Pop current user
         if (this.onlineUsers !== null){
-        this.onlineUsers.forEach((user,index) =>
+        this.onlineUsers.forEach((user) =>
         this.usernames.push(user.username)
       )
       this.usernames = this.difference(this.usernames,this.friendList)
           this.friendListStatus = this.mapListToStatus(this.friendList)
           this.usernameListStatus = this.mapListToStatus(this.usernames)
       }
-      }))
+      },
+      () =>{
+        this.notificationService.createNotification("Error getting online users.")
+      }
+    ))
 
 
   }
 
   askForFriendship(user1: string, user2: string): void {
-    this.subscriptions.push(this.friendshipService.createFriendship(user1, user2).subscribe(resp => {
+    this.subscriptions.push(this.friendshipService.createFriendship(user1, user2).subscribe(() => {
       alert("Asked for friendship!")
+    }, () => {
+      this.notificationService.createNotification("Asking for friendship unsuccessful.")
     }));
   }
   mapListToStatus(list: string[]): UpdateUserStatus[]{
     let newList: UpdateUserStatus[] = []
     if (list !== null){
-      list.forEach((username, index) => {
+      list.forEach((username) => {
       let user: UpdateUserStatus = {username:username,inGame:false,online:true}
       newList.push(user)
       })
@@ -96,7 +106,7 @@ export class SidePanelComponent implements OnInit, OnDestroy {
   modifyFriendshipToUsernames(list: Friendship[]): string[] {
     let resultList: string[] = [];
     if (list !== null){
-    list.forEach((friendship, index) => {
+    list.forEach((friendship) => {
       if (friendship.user1 === this.currentUser) {
         resultList.push(friendship.user2)
       }
@@ -120,8 +130,8 @@ export class SidePanelComponent implements OnInit, OnDestroy {
   }
 
   inviteUser(user: string) {
-    this.subscriptions.push(this.gameService.createGame(this.currentUser,user).subscribe(res =>{
-      console.log(res)
-    }))
+    this.subscriptions.push(this.gameService.createGame(this.currentUser,user).subscribe(()=>{},()=>
+      this.notificationService.createNotification("Error getting your friendships.")
+    ));
   }
 }

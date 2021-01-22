@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {User} from "../../models/user";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
               private http: HttpClient,
               private formBuilder: FormBuilder,
               private router: Router,
-              private soucialAuth: SocialAuthService) {
+              private soucialAuth: SocialAuthService,
+              private notificationService: NotificationService) {
     if (this.loginService.currentUserValue) {
       this.router.navigate(['/']);
     }
@@ -45,7 +47,7 @@ export class LoginComponent implements OnInit {
           this.loginService.currentUserSubject.next(u);
           this.router.navigate(['/'])
         }, err => {
-          console.log(err)
+          this.notificationService.createNotification("Login with Google unsuccessful.")
         }
       );
     });
@@ -58,7 +60,11 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('currentUser', JSON.stringify(u));
         this.loginService.currentUserSubject.next(u);
         this.router.navigate(['/'])}, err => {
-        //show error message
+        if (err.status === 401){
+          this.notificationService.createNotification("Wrong username or password")
+        } else {
+          this.notificationService.createNotification("Login unsuccessful.")
+        }
       }
     );
   };

@@ -151,33 +151,33 @@ export class TttComponent implements OnInit, OnDestroy {
         }, false);
       }
 
-  checkWin(shape:string, lastMove: any) {
-    let requiredLineLength = 5;
+  checkWin(shape:string, move: any) {
+    let minimumLength = 5;
     let lineDirections = [
-      [0, 1], //horizontal
-      [1, 0], //vertical
-      [1, -1], //diagonal 1
-      [1, 1] //diagonal 2
+      [0, 1], //horizontal check -
+      [1, 0], //vertical check |
+      [1, -1], //diagonal check --> \
+      [1, 1] //diagonal check --> /
     ];
     let won = false;
     for (let i = 0; i < lineDirections.length && !won; i++) {
       let shift = lineDirections[i];
-      let currentSquare = [lastMove[0] + shift[0], lastMove[1] + shift[1]];
+      let currentSurounding = [move[0] + shift[0], move[1] + shift[1]];
       let lineLength = 1;
 
-      while (lineLength < requiredLineLength && this.legalSquare(currentSquare) && this.board[currentSquare[0]][currentSquare[1]] === shape) {
+      while (lineLength < minimumLength && this.legalSquare(currentSurounding) && this.board[currentSurounding[0]][currentSurounding[1]] === shape) {
         lineLength++;
-        currentSquare[0] += shift[0];
-        currentSquare[1] += shift[1];
+        currentSurounding[0] += shift[0];
+        currentSurounding[1] += shift[1];
       }
 
-      currentSquare = [lastMove[0] - shift[0], lastMove[1] - shift[1]];
-      while (lineLength < requiredLineLength && this.legalSquare(currentSquare) && this.board[currentSquare[0]][currentSquare[1]] === shape) {
+      currentSurounding = [move[0] - shift[0], move[1] - shift[1]];
+      while (lineLength < minimumLength && this.legalSquare(currentSurounding) && this.board[currentSurounding[0]][currentSurounding[1]] === shape) {
         lineLength++;
-        currentSquare[0] -= shift[0];
-        currentSquare[1] -= shift[1];
+        currentSurounding[0] -= shift[0];
+        currentSurounding[1] -= shift[1];
       }
-      if (lineLength >= requiredLineLength)
+      if (lineLength >= minimumLength)
         won = true;
     }
     return won;

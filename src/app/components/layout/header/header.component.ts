@@ -4,6 +4,7 @@ import {FriendshipService} from "../../../services/friendship.service";
 import {Friendship} from "../../../models/friendship";
 import {Observable, Subscription, timer} from "rxjs";
 import {switchMap} from "rxjs/operators";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,8 @@ export class HeaderComponent implements OnInit {
   // @ts-ignore
   interval: NodeJS.Timeout
   constructor(private ls: LoginService,
-              private friendshipService: FriendshipService) {
+              private friendshipService: FriendshipService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -33,7 +35,10 @@ export class HeaderComponent implements OnInit {
     if (this.friendsRequestList !== null){
       this.friendsRequestsNumber = this.friendsRequestList.length
     }
-});
+}, () => {
+    this.notificationService.createNotification("Friendship requests update unsuccessful.")
+
+  });
 }
   Logout(): void {
     clearInterval(this.interval)
